@@ -8,8 +8,8 @@
     <body>
       <section class="todoapp">
         <header class="header">
-          <h1>Todos</h1>
-          <input class="new-todo" placeholder="What needs to be done?" 
+          <h1>Task List</h1>
+          <input class="new-todo" placeholder="New task at hand" 
             autofocus="" onkeypress="addItem(event)">
         </header>
 
@@ -30,11 +30,11 @@
         // configure pusher
         const pusher = new Pusher('67e28f4a286cfbf553ba', {
           cluster: 'us2', // gotten from Pusher app dashboard
-          encrypted: true // optional
+          //encrypted: true // optional
         });
 
         // subscribe to `todo` public channel, on which we'd be broadcasting events
-        const channel = pusher.subscribe('todo');
+        const channel = pusher.subscribe('todoit');
 
         // listen for item-added events, and update todo list once event triggered
         channel.bind('item-added', data => {
@@ -55,13 +55,13 @@
           elem.dataset.completed = data.completed;
           elem.checked = data.completed == 1;
         });
-        
+
         // function that makes API call to add an item
         function addItem(e) {
           // if enter key is pressed on the form input, add new item
           if (e.which == 13 || e.keyCode == 13) {
             let item = document.querySelector('.new-todo');
-            fetch('/add-todo', {
+            fetch('http://localhost:5000/add-todoit', {
               method: 'post',
               body: JSON.stringify({ 
                 id: `item-${Date.now()}`,
@@ -70,15 +70,17 @@
               })
             })
             .then(resp => {
+              console.log('tried to add an item')
               // empty form input once a response is received
               item.value = ""
-            });
+            })
+            .catch( err => console.log(err));
           }
         }
 
         // function that makes API call to remove an item
         function removeItem(id) {
-          fetch(`/remove-todo/${id}`);
+          fetch(`/remove-todoit/${id}`);
         }
 
         // function that makes API call to update an item 
@@ -87,7 +89,7 @@
         function toggleComplete(elem) {
           let id = elem.dataset.id,
               completed = (elem.dataset.completed == "1" ? "0" : "1");
-          fetch(`/update-todo/${id}`, {
+          fetch(`/update-todoit/${id}`, {
             method: 'post',
             body: JSON.stringify({ completed })
           });
