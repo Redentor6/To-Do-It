@@ -61,7 +61,7 @@
           // if enter key is pressed on the form input, add new item
           if (e.which == 13 || e.keyCode == 13) {
             let item = document.querySelector('.new-todo');
-            fetch('http://localhost:5000/add-todoit', {
+            fetch('/add-todoit', {
               method: 'post',
               body: JSON.stringify({ 
                 id: `item-${Date.now()}`,
