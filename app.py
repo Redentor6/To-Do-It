@@ -44,4 +44,6 @@ def updateTodo(item_id):
   return jsonify(data)
 
     # run Flask app in debug mode
-app.run(debug=True)
+#app.run(debug=True)
+
+app.run(host='0.0.0.0')
